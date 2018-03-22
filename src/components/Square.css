@@ -1,0 +1,55 @@
+.square-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 100px;
+  border: 1px solid black;
+}
+
+
+.top.left {
+  border: 0;
+}
+
+.top.right {
+  border: 0;
+}
+
+.top.center {
+  border-top: 0;
+}
+
+.bottom.left {
+  border: 0;
+}
+
+.bottom.right {
+  border: 0;
+}
+
+.bottom.center {
+  border-bottom: 0;
+}
+
+.center.top {
+  border-bottom: 0;
+}
+
+.center.bottom {
+  border-top: 0;
+}
+
+.center.middle {
+  border-left: 0;
+  border-right: 0;
+}
+
+.middle.right {
+  border-right: 0;
+}
+
+.middle.left {
+  border-left: 0;
+}
