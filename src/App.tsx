@@ -1,7 +1,8 @@
 import * as React from 'react';
 import './App.css';
-import Square from './components/Square';
-import isgameover from './isgameover';
+
+import isgameover, {default as GameState} from './GameState';
+import Board from './components/Board';
 
 interface AppState {
   turn: 'Player1' | 'Player2';
@@ -9,8 +10,7 @@ interface AppState {
   gameStatus: number;
 }
 
-interface AppProps {
-}
+interface AppProps {}
 
 class App extends React.Component<AppProps, AppState> {
 
@@ -28,14 +28,14 @@ class App extends React.Component<AppProps, AppState> {
 
   componentDidUpdate(previousProps: AppProps, previousState: AppState) {
     if (previousState.turn !== this.state.turn) {
+      const gameState = new GameState(this.state.grid);
       this.setState({
-        gameStatus: isgameover(this.state.grid),
+        gameStatus: gameState.getStatus(),
       });
     }
   }
 
   squareClicked = (gridLocation: number) => {
-    // TODO: verify the click was valid
     const previousGrid = this.state.grid.slice();
     previousGrid[gridLocation] = this.state.turn === 'Player1' ? 1 : 2;
     const turn = this.state.turn === 'Player1' ? 'Player2' : 'Player1';
@@ -50,70 +50,9 @@ class App extends React.Component<AppProps, AppState> {
     return (
       <div className="App">
         <div className="state-description-row">
-          {gameStatus === 0 ? this.state.turn : `Player${gameStatus} wins`}
+          {gameStatus === 0 ? `${this.state.turn}'s turn` : `Player${gameStatus} wins`}
         </div>
-        <div className="board-container">
-          <div className="board-row">
-            <Square
-              classNames={['top', 'left']}
-              squareClicked={this.squareClicked}
-              symbol={this.state.grid[0]}
-              location={0}
-            />
-            <Square
-              classNames={['top', 'center']}
-              squareClicked={this.squareClicked}
-              symbol={this.state.grid[1]}
-              location={1}
-            />
-            <Square
-              classNames={['top', 'right']}
-              squareClicked={this.squareClicked}
-              symbol={this.state.grid[2]}
-              location={2}
-            />
-          </div>
-          <div className="board-row">
-            <Square
-              classNames={['middle', 'left']}
-              squareClicked={this.squareClicked}
-              symbol={this.state.grid[3]}
-              location={3}
-            />
-            <Square
-              classNames={['middle', 'center']}
-              squareClicked={this.squareClicked}
-              symbol={this.state.grid[4]}
-              location={4}
-            />
-            <Square
-              classNames={['middle', 'right']}
-              squareClicked={this.squareClicked}
-              symbol={this.state.grid[5]}
-              location={5}
-            />
-          </div>
-          <div className="board-row">
-            <Square
-              classNames={['bottom', 'left']}
-              squareClicked={this.squareClicked}
-              symbol={this.state.grid[6]}
-              location={6}
-            />
-            <Square
-              classNames={['bottom', 'center']}
-              squareClicked={this.squareClicked}
-              symbol={this.state.grid[7]}
-              location={7}
-            />
-            <Square
-              classNames={['bottom', 'right']}
-              squareClicked={this.squareClicked}
-              symbol={this.state.grid[8]}
-              location={8}
-            />
-          </div>
-        </div>
+        <Board grid={this.state.grid} squareClicked={this.squareClicked}/>
       </div>
     );
   }
