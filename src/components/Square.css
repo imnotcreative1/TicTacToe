@@ -41,15 +41,12 @@
   border-top: 0;
 }
 
-.center.middle {
-  border-left: 0;
-  border-right: 0;
-}
-
 .middle.right {
   border-right: 0;
+  border-left: 0;
 }
 
 .middle.left {
   border-left: 0;
+  border-right: 0;
 }

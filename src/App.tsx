@@ -1,6 +1,7 @@
 import * as React from 'react';
 import './App.css';
 import Square from './components/Square';
+import isgameover from './isgameover';
 
 interface AppState {
   turn: 'Player1' | 'Player2';
@@ -28,7 +29,7 @@ class App extends React.Component<AppProps, AppState> {
   componentDidUpdate(previousProps: AppProps, previousState: AppState) {
     if (previousState.turn !== this.state.turn) {
       this.setState({
-        gameStatus: this.isGameOver(),
+        gameStatus: isgameover(this.state.grid),
       });
     }
   }
@@ -44,15 +45,12 @@ class App extends React.Component<AppProps, AppState> {
     });
   }
 
-  isGameOver = (): number => {
-    return 0;
-  }
-
   render() {
+    const { gameStatus } = this.state;
     return (
       <div className="App">
         <div className="state-description-row">
-          {this.state.turn}
+          {gameStatus === 0 ? this.state.turn : `Player${gameStatus} wins`}
         </div>
         <div className="board-container">
           <div className="board-row">
