@@ -30,7 +30,7 @@ class Board extends React.Component<BoardProps> {
     for (let i = 0; i < boardSize; i++) {
       rows.push(
         (
-          <div className="board-row">
+          <div className="board-row" key={i}>
           {Board.getSquares(i * boardSize, (i + 1) * boardSize, boardProps)}
         </div>
         ));

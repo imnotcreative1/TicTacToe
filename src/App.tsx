@@ -5,6 +5,7 @@ import GameState from './GameState';
 import Board from './components/Board';
 
 const DEFAULT_BOARD_SIZE = 4;
+const DEFAULT_DEPTH = 4;
 
 interface AppState {
   turn: 'Player1' | 'Player2';
@@ -12,6 +13,7 @@ interface AppState {
   gameStatus: number;
   lastSelectedSquare: number;
   boardSize: number;
+  depth: number;
 }
 
 interface AppProps {}
@@ -35,6 +37,7 @@ class App extends React.Component<AppProps, AppState> {
       gameStatus: 0,
       lastSelectedSquare: 0,
       boardSize: DEFAULT_BOARD_SIZE,
+      depth: DEFAULT_DEPTH,
     };
 
     this.squareClicked = this.squareClicked.bind(this);
@@ -42,7 +45,8 @@ class App extends React.Component<AppProps, AppState> {
 
   componentDidUpdate(previousProps: AppProps, previousState: AppState) {
     if (previousState.turn !== this.state.turn) {
-      const gameState = new GameState(this.state.grid, this.state.lastSelectedSquare, this.state.boardSize);
+      const gameState =
+        new GameState(this.state.grid, this.state.lastSelectedSquare, this.state.boardSize, this.state.depth);
       this.setState({
         gameStatus: gameState.getStatus(),
       });
@@ -63,7 +67,7 @@ class App extends React.Component<AppProps, AppState> {
   render() {
     const { gameStatus } = this.state;
     // tslint:disable-next-line
-    console.log(new GameState(this.state.grid, this.state.lastSelectedSquare, this.state.boardSize).getStatus());
+    // console.log(new GameState(this.state.grid, this.state.lastSelectedSquare, this.state.boardSize, this.state.depth).getStatus());
     return (
       <div className="App">
         <div className="state-description-row">

@@ -11,6 +11,7 @@ class GameState {
   private startingSquareLocation: number;
   private movementValue: movementDirection;
   private boardSize: number;
+  private depth: number;
 
   private static createMovementObject(boardSize: number): movementDirection {
     return {
@@ -21,28 +22,29 @@ class GameState {
     };
   }
 
-  constructor(grid: number[], index: number, boardSize: number) {
+  constructor(grid: number[], index: number, boardSize: number, depth: number) {
     this.grid = grid;
     this.startingSquareLocation = index;
     this.movementValue = GameState.createMovementObject(boardSize);
     this.boardSize = boardSize;
+    this.depth = depth;
   }
 
   getStatus = (): number => {
     const horizontalDepth = this.gameStatusForAMovement(this.movementValue.horizontal);
-    if (horizontalDepth === 3) {
+    if (horizontalDepth === this.depth) {
       return this.grid[this.startingSquareLocation];
     }
     const verticalDepth = this.gameStatusForAMovement(this.movementValue.vertical);
-    if (verticalDepth === 3) {
+    if (verticalDepth === this.depth) {
       return this.grid[this.startingSquareLocation];
     }
     const diagonalDownRightDepth = this.gameStatusForAMovement(this.movementValue.diagonalDownRight);
-    if (diagonalDownRightDepth === 3) {
+    if (diagonalDownRightDepth === this.depth) {
       return this.grid[this.startingSquareLocation];
     }
     const diagonalDownLeftDepth = this.gameStatusForAMovement(this.movementValue.diagonalDownLeft);
-    if (diagonalDownLeftDepth === 3) {
+    if (diagonalDownLeftDepth === this.depth) {
       return this.grid[this.startingSquareLocation];
     }
     return 0;
@@ -51,18 +53,22 @@ class GameState {
   private gameStatusForAMovement(movement: number): number {
     const posMove =  this.gameStatusHelper(this.startingSquareLocation, movement, 1);
     const negMove = this.gameStatusHelper(this.startingSquareLocation, -movement, 0);
+    // tslint:disable-next-line
+    console.log(negMove);
     return posMove + negMove;
   }
 
   private gameStatusHelper(index: number, movement: number, depth: number): number {
     const grid = this.grid;
     const squareValue = grid[index];
+    // tslint:disable-next-line
+    // debugger;
 
     if (squareValue === 0) {
       return 0;
     } else if (this.isMovementAllowed(index, movement) && squareValue === grid[index + movement]) {
-      if (depth + 1 === 3) {
-        return 3;
+      if (depth + 1 === this.depth) {
+        return this.depth;
       }
       return this.gameStatusHelper(index + movement, movement, depth + 1);
     }
@@ -92,7 +98,7 @@ class GameState {
         }
         break;
       case -1 * this.movementValue.vertical:
-        if (!canMoveUp) {
+        if (canMoveUp) {
           return true;
         }
         break;
@@ -107,7 +113,7 @@ class GameState {
         }
         break;
       case this.movementValue.diagonalDownLeft:
-        if (canMoveDown || canMoveLeft) {
+        if (canMoveDown && canMoveLeft) {
           return true;
         }
         break;
