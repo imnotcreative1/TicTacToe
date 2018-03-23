@@ -1,95 +1,113 @@
 const movementValue: {[key: string]: number} = {
-  right: 1,
-  diagonalRight: 2,
-  down: 3,
-  diagonalLeft: 4,
+  horizontal: 1,
+  diagonalDownLeft: 2,
+  vertical: 3,
+  diagonalDownRight: 4,
 };
 
 class GameState {
-  private grid: number[];
 
-  constructor(grid: number[]) {
+  private grid: number[];
+  private startingSquareLocation: number;
+
+  private static isMovementAllowed(index: number, movement: number) {
+    const canMoveUp = index > 2;
+    const canMoveDown = index < 6;
+    const canMoveLeft = index % 3 !== 0;
+    const canMoveRight = index % 3 !== 2;
+
+    switch (movement) {
+      case movementValue.horizontal:
+        if (canMoveRight) {
+          return true;
+        }
+        break;
+      case -1 * movementValue.horizontal:
+        if (canMoveLeft) {
+          return true;
+        }
+        break;
+      case movementValue.vertical:
+        if (canMoveDown) {
+          return true;
+        }
+        break;
+      case -1 * movementValue.vertical:
+        if (!canMoveUp) {
+          return true;
+        }
+        break;
+      case movementValue.diagonalDownRight:
+        if (canMoveDown && canMoveRight) {
+          return true;
+        }
+        break;
+      case -1 * movementValue.diagonalDownRight:
+        if (canMoveUp && canMoveLeft) {
+          return true;
+        }
+        break;
+      case movementValue.diagonalDownLeft:
+        if (canMoveDown || canMoveLeft) {
+          return true;
+        }
+        break;
+      case -1 * movementValue.diagonalDownLeft:
+        if (canMoveUp && canMoveRight) {
+          return true;
+        }
+        break;
+      default:
+        return false;
+    }
+    return false;
+  }
+
+  constructor(grid: number[], index: number) {
     this.grid = grid;
+    this.startingSquareLocation = index;
   }
 
   getStatus = (): number => {
-    const horizontalResult = this.gameStatusForAMovement(movementValue.right);
-    if (horizontalResult) {
-      return horizontalResult;
+    const horizontalDepth = this.gameStatusForAMovement(movementValue.horizontal);
+    if (horizontalDepth === 3) {
+      return this.grid[this.startingSquareLocation];
     }
-    const verticalResult = this.gameStatusForAMovement(movementValue.down);
-    if (verticalResult) {
-      return verticalResult;
+    const verticalDepth = this.gameStatusForAMovement(movementValue.vertical);
+    if (verticalDepth === 3) {
+      return this.grid[this.startingSquareLocation];
     }
-    const diagonalRightResult = this.gameStatusForAMovement(movementValue.diagonalRight);
-    if (diagonalRightResult) {
-      return diagonalRightResult;
+    const diagonalDownRightDepth = this.gameStatusForAMovement(movementValue.diagonalDownRight);
+    if (diagonalDownRightDepth === 3) {
+      return this.grid[this.startingSquareLocation];
     }
-    const diagonalLeftResult = this.gameStatusForAMovement(movementValue.diagonalLeft);
-    if (diagonalLeftResult) {
-      return diagonalLeftResult;
+    const diagonalDownLeftDepth = this.gameStatusForAMovement(movementValue.diagonalDownLeft);
+    if (diagonalDownLeftDepth === 3) {
+      return this.grid[this.startingSquareLocation];
     }
     return 0;
   }
 
-  private gameStatusForAMovement(movement: number) {
-    for (let i = 0; i < 9; i++) {
-      const result = this.gameStatusHelper(i, movement, 1);
-      if (result !== 0) {
-        return result;
-      }
-    }
-    return 0;
+  private gameStatusForAMovement(movement: number): number {
+    const posMove =  this.gameStatusHelper(this.startingSquareLocation, movement, 1);
+    const negMove = this.gameStatusHelper(this.startingSquareLocation, -movement, 0);
+    return posMove + negMove;
   }
 
   private gameStatusHelper(index: number, movement: number, depth: number): number {
     const grid = this.grid;
-    if (grid[index] !== 0 && GameState.isMovementAllowed(index, movement) && grid[index] === grid[index + movement]) {
+    const squareValue = grid[index];
+
+    if (squareValue === 0) {
+      return 0;
+    } else if (GameState.isMovementAllowed(index, movement) && squareValue === grid[index + movement]) {
       if (depth + 1 === 3) {
-        return grid[index];
+        return 3;
       }
       return this.gameStatusHelper(index + movement, movement, depth + 1);
     }
-    return 0;
-  }
-
-  private static isMovementAllowed(index: number, movement: number) {
-    switch (movement) {
-      case movementValue.right:
-        if (index % 3 === 2) {
-          return false;
-        }
-        break;
-      case movementValue.down:
-        if (index > 5) { // down
-          return false;
-        }
-        break;
-      case movementValue.diagonalRight:
-        if (index > 5 || index % 3 === 2) { // down or right
-          return false;
-        }
-        break;
-      case movementValue.diagonalLeft:
-        if (index % 3 === 0 || index > 5) { // down or right
-          return false;
-        }
-        break;
-    }
-    return true;
+    return depth;
   }
 }
 
 export default GameState;
-
-// Rules
-// 0 1 2
-// 3 4 5
-// 6 7 8
-// under 3, can't go up
-// over 5, can't go down
-// divisible by 3, can't go left
-// x % 3 === 2, can't go right
-
-// Going right -> adding 1
-// Going down -> adding 3

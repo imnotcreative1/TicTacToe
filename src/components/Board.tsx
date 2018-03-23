@@ -7,21 +7,6 @@ interface BoardProps {
 }
 
 class Board extends React.Component<BoardProps> {
-  render() {
-    return (
-      <div className="board-container">
-        <div className="board-row">
-          {Board.getSquares(0, 3, this.props)}
-        </div>
-        <div className="board-row">
-          {Board.getSquares(3, 6, this.props)}
-        </div>
-        <div className="board-row">
-          {Board.getSquares(6, 9, this.props)}
-        </div>
-      </div>
-    );
-  }
 
   private static getSquares(startLocation: number, endLocation: number, boardProps: BoardProps): JSX.Element[] {
     const nineSquares: JSX.Element[] = [];
@@ -32,6 +17,7 @@ class Board extends React.Component<BoardProps> {
           squareClicked={boardProps.squareClicked}
           symbol={boardProps.grid[squareLocation]}
           location={squareLocation}
+          key={squareLocation}
         />
       );
     }
@@ -51,6 +37,21 @@ class Board extends React.Component<BoardProps> {
       8: ['bottom', 'right'],
     };
     return classNameMap[squareLocation];
+  }
+  render() {
+    return (
+      <div className="board-container">
+        <div className="board-row">
+          {Board.getSquares(0, 3, this.props)}
+        </div>
+        <div className="board-row">
+          {Board.getSquares(3, 6, this.props)}
+        </div>
+        <div className="board-row">
+          {Board.getSquares(6, 9, this.props)}
+        </div>
+      </div>
+    );
   }
 }
 
