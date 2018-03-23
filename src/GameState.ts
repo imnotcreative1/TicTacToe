@@ -1,3 +1,5 @@
+import GameStatus from './enums/GameStatus';
+
 type movementDirection = {
   horizontal: number,
   vertical: number,
@@ -47,22 +49,17 @@ class GameState {
     if (diagonalDownLeftDepth === this.depth) {
       return this.grid[this.startingSquareLocation];
     }
-    return 0;
+    return GameStatus.InProgress;
   }
 
   private gameStatusForAMovement(movement: number): number {
-    const posMove =  this.gameStatusHelper(this.startingSquareLocation, movement, 1);
-    const negMove = this.gameStatusHelper(this.startingSquareLocation, -movement, 0);
-    // tslint:disable-next-line
-    console.log(negMove);
-    return posMove + negMove;
+    return this.gameStatusHelper(this.startingSquareLocation, movement, 1) +
+      this.gameStatusHelper(this.startingSquareLocation, -movement, 0);
   }
 
   private gameStatusHelper(index: number, movement: number, depth: number): number {
     const grid = this.grid;
     const squareValue = grid[index];
-    // tslint:disable-next-line
-    // debugger;
 
     if (squareValue === 0) {
       return 0;

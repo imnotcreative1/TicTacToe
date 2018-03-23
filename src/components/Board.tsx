@@ -10,9 +10,9 @@ interface BoardProps {
 class Board extends React.Component<BoardProps> {
 
   private static getSquares(startLocation: number, endLocation: number, boardProps: BoardProps): JSX.Element[] {
-    const nineSquares: JSX.Element[] = [];
+    const squares: JSX.Element[] = [];
     for (let squareLocation = startLocation; squareLocation < endLocation; squareLocation++) {
-      nineSquares.push(
+      squares.push(
         <Square
           squareClicked={boardProps.squareClicked}
           symbol={boardProps.grid[squareLocation]}
@@ -21,7 +21,7 @@ class Board extends React.Component<BoardProps> {
         />
       );
     }
-    return nineSquares;
+    return squares;
   }
 
   private static getRowsOfSquares(boardProps: BoardProps): JSX.Element[] {
@@ -37,22 +37,6 @@ class Board extends React.Component<BoardProps> {
     }
     return rows;
   }
-
-  // TODO: make this work for any number of squares
-  // private static getPositionClassNamesForASquare(squareLocation: number): [string, string] {
-  //   const classNameMap: { [key: number]: [string, string] } = {
-  //     0: ['top', 'left'],
-  //     1: ['top', 'center'],
-  //     2: ['top', 'right'],
-  //     3: ['middle', 'left'],
-  //     4: ['middle', 'center'],
-  //     5: ['middle', 'right'],
-  //     6: ['bottom', 'left'],
-  //     7: ['bottom', 'center'],
-  //     8: ['bottom', 'right'],
-  //   };
-  //   return classNameMap[squareLocation];
-  // }
 
   render() {
     return (

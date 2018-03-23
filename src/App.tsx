@@ -3,17 +3,19 @@ import './App.css';
 
 import GameState from './GameState';
 import Board from './components/Board';
+import PlayerIdentifier from './enums/PlayerIdentifier';
+import GameStatus from './enums/GameStatus';
+import Symbol from './enums/Symbol';
 
-const DEFAULT_BOARD_SIZE = 4;
-const DEFAULT_DEPTH = 4;
+const DEFAULT_BOARD_SIZE = 5;
+const DEFAULT_DEPTH = 3;
 
 interface AppState {
-  turn: 'Player1' | 'Player2';
+  turn: PlayerIdentifier;
   grid: number[];
-  gameStatus: number;
-  lastSelectedSquare: number;
-  boardSize: number;
-  depth: number;
+  gameStatus: GameStatus;
+  boardSize: number; // side size not total squares
+  depth: number; // how many "O"s or "X"s a player needs to connected to win
 }
 
 interface AppProps {}
@@ -23,7 +25,7 @@ class App extends React.Component<AppProps, AppState> {
   private static createEmptyGrid(boardSize: number = DEFAULT_BOARD_SIZE) {
     const grid = [];
     for (let i = 0; i < boardSize * boardSize; i++) {
-      grid.push(0);
+      grid.push(Symbol.Empty);
     }
     return grid;
   }
@@ -32,10 +34,9 @@ class App extends React.Component<AppProps, AppState> {
     super(props, state);
 
     this.state = {
-      turn: 'Player1',
+      turn: PlayerIdentifier.Player1,
       grid: App.createEmptyGrid(),
-      gameStatus: 0,
-      lastSelectedSquare: 0,
+      gameStatus: GameStatus.InProgress,
       boardSize: DEFAULT_BOARD_SIZE,
       depth: DEFAULT_DEPTH,
     };
@@ -43,37 +44,28 @@ class App extends React.Component<AppProps, AppState> {
     this.squareClicked = this.squareClicked.bind(this);
   }
 
-  componentDidUpdate(previousProps: AppProps, previousState: AppState) {
-    if (previousState.turn !== this.state.turn) {
-      const gameState =
-        new GameState(this.state.grid, this.state.lastSelectedSquare, this.state.boardSize, this.state.depth);
-      this.setState({
-        gameStatus: gameState.getStatus(),
-      });
-    }
-  }
-
   squareClicked = (gridLocation: number) => {
-    const previousGrid = this.state.grid.slice();
-    previousGrid[gridLocation] = this.state.turn === 'Player1' ? 1 : 2;
-    const turn = this.state.turn === 'Player1' ? 'Player2' : 'Player1';
+    const {grid, turn, boardSize, depth} = this.state;
+    const previousGrid = grid.slice();
+    previousGrid[gridLocation] = turn === PlayerIdentifier.Player1 ? Symbol.X : Symbol.O;
+    const nextTurn = turn === PlayerIdentifier.Player1 ? PlayerIdentifier.Player2 : PlayerIdentifier.Player1;
+    const gameState = new GameState(previousGrid, gridLocation, boardSize, depth);
+    const gameStatus = gameState.getStatus();
     this.setState({
-      turn,
+      turn: nextTurn,
       grid: previousGrid,
-      lastSelectedSquare: gridLocation,
+      gameStatus,
     });
   }
 
   render() {
-    const { gameStatus } = this.state;
-    // tslint:disable-next-line
-    // console.log(new GameState(this.state.grid, this.state.lastSelectedSquare, this.state.boardSize, this.state.depth).getStatus());
+    const {boardSize, gameStatus, turn, grid} = this.state;
     return (
       <div className="App">
         <div className="state-description-row">
-          {gameStatus === 0 ? `${this.state.turn}'s turn` : `Player${gameStatus} wins`}
+          {gameStatus === GameStatus.InProgress ? `${PlayerIdentifier[turn]}'s turn` : `${GameStatus[gameStatus]}`}
         </div>
-        <Board grid={this.state.grid} squareClicked={this.squareClicked} boardSize={this.state.boardSize}/>
+        <Board grid={grid} squareClicked={this.squareClicked} boardSize={boardSize}/>
       </div>
     );
   }
