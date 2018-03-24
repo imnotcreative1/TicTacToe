@@ -1,0 +1,12 @@
+.connected-player-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 120px;
+  width: 150px;
+  height: 100%;
+}
+
+.list {
+  margin-top: 100px;
+}
