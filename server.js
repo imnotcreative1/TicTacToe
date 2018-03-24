@@ -3,7 +3,9 @@ const io = require('socket.io')();
 io.on('connection', (client) => {
     client.on('subscribeToNewUser', () => {
         console.log('client is subscribing to a new user');
-        client.emit('newUser', 'New User\'s Name');
+        client.join('the only room', () => {
+            io.to('the only room').emit('newUser', 'New User\'s Name');
+        });
     });
 });
 

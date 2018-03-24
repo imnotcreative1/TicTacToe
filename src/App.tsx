@@ -6,9 +6,11 @@ import './App.css';
 
 interface AppState {
   users: string[];
+  numberOfUsersConnected: number;
 }
 
-interface AppProps {}
+interface AppProps {
+}
 
 class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps, state: AppState) {
@@ -16,20 +18,33 @@ class App extends React.Component<AppProps, AppState> {
 
     this.state = {
       users: [],
+      numberOfUsersConnected: 0,
     };
+
+    this.addNewUser = this.addNewUser.bind(this);
   }
 
   componentWillMount() {
     // tslint:disable-next-line
     console.log('subscribing to new user');
-    subscribeToNewUser((newUser: string) => this.setState({
-      users: [newUser],
-    }));
+    subscribeToNewUser(this.addNewUser);
+  }
+
+  addNewUser = (newUser: string) => {
+    // tslint:disable-next-line
+    console.log('tried to add new user');
+    let previousListOfUsers: string[] = this.state.users;
+    let previousNumberOfUsersConnected = this.state.numberOfUsersConnected;
+    this.setState({
+      users: (previousListOfUsers as string[]).concat([newUser]),
+      numberOfUsersConnected: previousNumberOfUsersConnected + 1,
+    });
   }
 
   render() {
     return (
       <div className="App">
+        {this.state.numberOfUsersConnected}
         {this.state.users}
         <ConnectedPlayersList/>
         <LocalGame/>
