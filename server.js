@@ -4,7 +4,8 @@ io.on('connection', (client) => {
     client.on('subscribeToNewUser', () => {
         console.log('client is subscribing to a new user');
         client.join('the only room', () => {
-            io.to('the only room').emit('newUser', 'New User\'s Name');
+            // TODO: emit all the current users for display
+            io.to('the only room').emit('newUser', 'A User');
         });
     });
 });

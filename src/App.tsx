@@ -3,9 +3,12 @@ import LocalGame from './components/LocalGame';
 import ConnectedPlayersList from './components/ConnectedPlayersList';
 import './App.css';
 import UserAppInteractionState from './enums/UserAppInteractionState';
+import User from './models/User';
+import Login from './components/Login';
 
 interface AppState {
   userStatus: UserAppInteractionState;
+  user?: User;
 }
 
 interface AppProps {
@@ -23,6 +26,7 @@ class App extends React.Component<AppProps, AppState> {
   render() {
     return (
       <div className="App">
+        <Login/>
         <ConnectedPlayersList/>
         <LocalGame/>
       </div>
