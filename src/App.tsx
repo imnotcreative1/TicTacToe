@@ -4,7 +4,8 @@ import ConnectedPlayersList from './components/ConnectedPlayersList';
 import './App.css';
 import UserAppInteractionState from './enums/UserAppInteractionState';
 import User from './models/User';
-import Login from './components/Login';
+import { Store } from './models/models';
+import { connect, Dispatch } from 'react-redux';
 
 interface AppState {
   userStatus: UserAppInteractionState;
@@ -26,7 +27,6 @@ class App extends React.Component<AppProps, AppState> {
   render() {
     return (
       <div className="App">
-        <Login/>
         <ConnectedPlayersList/>
         <LocalGame/>
       </div>
@@ -34,4 +34,11 @@ class App extends React.Component<AppProps, AppState> {
   }
 }
 
-export default App;
+// tslint:disable-next-line
+const mapStateToProps = (state: Store) => {};
+
+const mapDispatchToProps = (dispatch: Dispatch<Store>) => {
+  return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
