@@ -4,21 +4,20 @@ const socket = io('http://localhost:8000');
 
 function firstCreateUser(username: string, getUser: (username: string, userID: number) => void) {
   socket.on('createdUser', (user: {username: string, userID: number}) => {
-    console.log('created user');
-    getUser(user.username, user.userID)
+    getUser(user.username, user.userID);
   });
   socket.emit('createUserRequest', username);
 }
 
-function subscribeToNewUser(username: string, setNewUser: (user: User) => void) {
-  socket.on('newUser', (newUser: User) => setNewUser(newUser));
-  socket.emit('subscribeToNewUser', username);
+function subscribeToNewUsers(username: string, setUsers: (users: User[]) => void) {
+  socket.on('newUser', (users: User[]) => setUsers(users));
+  socket.emit('subscribeToNewUsers', username);
 }
 
 function challengePlayer(user: User, handleChallengeResponse: (response: string, user: User) => void) {
-  socket.on('challengeAnswered',
-    (response: string, user: User) => handleChallengeResponse(response, user));
+  socket.on('challengeAnswered', (response: string, challengedUser: User) =>
+    handleChallengeResponse(response, challengedUser));
   socket.emit('challengePlayer', user);
 }
 
-export { subscribeToNewUser, challengePlayer, firstCreateUser };
+export { subscribeToNewUsers, challengePlayer, firstCreateUser };

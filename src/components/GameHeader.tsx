@@ -3,8 +3,8 @@ import UserAppInteractionState from '../enums/UserAppInteractionState';
 import PlayerIdentifier from '../enums/PlayerIdentifier';
 
 interface GameHeaderProps {
-  userStatus: UserAppInteractionState,
-  playerTurn?: number,
+  userStatus: UserAppInteractionState;
+  playerTurn?: number;
 }
 
 class GameHeader extends React.Component<GameHeaderProps> {
@@ -28,6 +28,6 @@ class GameHeader extends React.Component<GameHeaderProps> {
       </div>
     );
   }
-};
+}
 
 export default GameHeader;

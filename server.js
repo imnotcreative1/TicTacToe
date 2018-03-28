@@ -9,19 +9,22 @@ function generateUserID() {
 const listOfAllUsers = [];
 
 io.on('connection', (client) => {
-    client.on('subscribeToNewUser', (username) => {
-        client.join('the only room', () => {
-            io.to('the only room').emit('newUser', { username: username, userID: 1});
+    client.on('subscribeToNewUsers', (username) => {
+        client.join('the lobby', () => {
+            io.to('the lobby').emit('newUser', listOfAllUsers);
         });
     });
     client.on('challengePlayer', (username) => {
        // TODO: find the client via their generate id
     });
     client.on('createUserRequest', (username) => {
+        // create the user
         const randomID = generateUserID();
         listOfAllUsers.push({ username: username, userID: randomID});
         console.log('added a new user with a username of ', username);
         client.emit('createdUser', {username: username, userID: randomID});
+        console.log('added a new User to the list of users');
+        console.log(listOfAllUsers);
     });
 });
 

@@ -3,8 +3,7 @@ import LocalGame from './components/LocalGame';
 import ConnectedPlayersList from './components/ConnectedPlayersList';
 import './App.css';
 import UserAppInteractionState from './enums/UserAppInteractionState';
-import User from './models/User';
-import { connect, Store } from 'react-redux';
+import { connect } from 'react-redux';
 import { GlobalStore } from './models/models';
 
 interface AppState {
@@ -12,7 +11,7 @@ interface AppState {
 }
 
 interface AppProps {
-  username: string,
+  username: string;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -37,8 +36,8 @@ class App extends React.Component<AppProps, AppState> {
 // tslint:disable-next-line
 const mapStateToProps = (state: GlobalStore) => {
   return {
-    username: state.username || '',
-  }
+    username: state.reducer.user ? state.reducer.user.username : '',
+  };
 };
 
 const mapDispatchToProps = () => {

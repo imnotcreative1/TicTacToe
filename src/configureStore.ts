@@ -8,6 +8,7 @@ export default function configureStore(preloadedState: GlobalStore) {
   return createStore(
     rootReducer,
     preloadedState,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    // TODO: (internet) figure out how to bypass this
+    // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );
 }

@@ -13,7 +13,7 @@ class ConnectedPlayerRowInList extends React.Component<ConnectedPlayerRowInListP
   render() {
     return (
       <div className="row">
-        {this.props.user.getUsername()}
+        {this.props.user.username}
         <button onClick={() => challengePlayer(this.props.user, this.props.handleChallengeResponse)}>
           Face
         </button>

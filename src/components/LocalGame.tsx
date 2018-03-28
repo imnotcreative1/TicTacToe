@@ -21,8 +21,8 @@ interface LocalGameState {
 }
 
 interface LocalGameProps {
-  userStatus: UserAppInteractionState,
-  username: string,
+  userStatus: UserAppInteractionState;
+  username: string;
 }
 
 class LocalGame extends React.Component<LocalGameProps, LocalGameState> {

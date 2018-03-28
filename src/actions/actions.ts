@@ -14,5 +14,5 @@ export function createGame(user: User) {
   return {
     type: CREATE_GAME,
     user,
-  }
+  };
 }

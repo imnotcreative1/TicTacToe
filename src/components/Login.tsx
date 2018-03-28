@@ -6,6 +6,7 @@ import './Login.css';
 import { connect, Dispatch } from 'react-redux';
 import { firstCreateUser } from '../api';
 import { GlobalStore } from '../models/models';
+import { Link } from 'react-router-dom';
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -46,7 +47,7 @@ class Login extends React.Component<LoginProps, LoginState> {
     this.setState({
       username: e.currentTarget.value,
     });
-  };
+  }
 
   createUserOnButtonClick() {
     firstCreateUser(this.state.username, this.props.createUser);
@@ -68,9 +69,11 @@ class Login extends React.Component<LoginProps, LoginState> {
             Log In
           </div>
           <TextField hintText="Username" onChange={this.updateUsername}/>
-          <button onClick={() => this.createUserOnButtonClick()}>
-            Sign in
-          </button>
+          <Link to="/app">
+            <button onClick={() => this.createUserOnButtonClick()}>
+              Sign in
+            </button>
+          </Link>
         </Card>
       </div>
     );
@@ -78,10 +81,9 @@ class Login extends React.Component<LoginProps, LoginState> {
 }
 // TODO: figure out why the state is being stored within a reducer object
 const mapStateToProps = (state: GlobalStore) => {
-  debugger;
   return {
     reduxUsername: state.reducer.user ? state.reducer.user.username : '',
-  }
+  };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
