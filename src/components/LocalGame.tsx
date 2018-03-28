@@ -6,6 +6,8 @@ import Board from '../components/Board';
 import PlayerIdentifier from '../enums/PlayerIdentifier';
 import GameStatus from '../enums/GameStatus';
 import Symbol from '../enums/Symbol';
+import UserAppInteractionState from '../enums/UserAppInteractionState';
+import GameHeader from './GameHeader';
 
 const DEFAULT_BOARD_SIZE = 3;
 const DEFAULT_DEPTH = 3;
@@ -18,7 +20,10 @@ interface LocalGameState {
   depth: number; // how many "O"s or "X"s a player needs to connected to win
 }
 
-interface LocalGameProps {}
+interface LocalGameProps {
+  userStatus: UserAppInteractionState,
+  username: string,
+}
 
 class LocalGame extends React.Component<LocalGameProps, LocalGameState> {
 
@@ -59,11 +64,11 @@ class LocalGame extends React.Component<LocalGameProps, LocalGameState> {
   }
 
   render() {
-    const {boardSize, gameStatus, turn, grid} = this.state;
+    const {boardSize, turn, grid} = this.state;
     return (
       <div className="LocalGame">
         <div className="state-description-row">
-          {gameStatus === GameStatus.InProgress ? `${PlayerIdentifier[turn]}'s turn` : `${GameStatus[gameStatus]}`}
+          <GameHeader userStatus={this.props.userStatus} playerTurn={turn}/>
         </div>
         <Board grid={grid} squareClicked={this.squareClicked} boardSize={boardSize}/>
       </div>

@@ -4,15 +4,15 @@ import ConnectedPlayersList from './components/ConnectedPlayersList';
 import './App.css';
 import UserAppInteractionState from './enums/UserAppInteractionState';
 import User from './models/User';
-import { Store } from './models/models';
-import { connect, Dispatch } from 'react-redux';
+import { connect, Store } from 'react-redux';
+import { GlobalStore } from './models/models';
 
 interface AppState {
   userStatus: UserAppInteractionState;
-  user?: User;
 }
 
 interface AppProps {
+  username: string,
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -27,17 +27,21 @@ class App extends React.Component<AppProps, AppState> {
   render() {
     return (
       <div className="App">
-        <ConnectedPlayersList/>
-        <LocalGame/>
+        <ConnectedPlayersList username={this.props.username}/>
+        <LocalGame userStatus={this.state.userStatus} username={this.props.username}/>
       </div>
     );
   }
 }
 
 // tslint:disable-next-line
-const mapStateToProps = (state: Store) => {};
+const mapStateToProps = (state: GlobalStore) => {
+  return {
+    username: state.username || '',
+  }
+};
 
-const mapDispatchToProps = (dispatch: Dispatch<Store>) => {
+const mapDispatchToProps = () => {
   return {};
 };
 

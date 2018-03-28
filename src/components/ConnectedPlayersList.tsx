@@ -2,11 +2,16 @@ import * as React from 'react';
 import './ConnectedPlayersList.css';
 import { subscribeToNewUser } from '../api';
 import ConnectedPlayerRowInList from './ConnectedPlayerRowInList';
+import { Dispatch } from 'react-redux';
+import { createGame } from '../actions/actions';
+import User from '../models/User';
 
-interface ConnectedPlayersListProps {}
+interface ConnectedPlayersListProps {
+  username: string,
+}
 
 interface ConnectedPlayersListState {
-  connectedUsers: string[];
+  connectedUsers: User[];
 }
 
 class ConnectedPlayersList extends React.Component<ConnectedPlayersListProps, ConnectedPlayersListState> {
@@ -24,33 +29,50 @@ class ConnectedPlayersList extends React.Component<ConnectedPlayersListProps, Co
   componentWillMount() {
     // tslint:disable-next-line
     console.log('subscribing to new user');
-    subscribeToNewUser(this.addNewUser);
+    subscribeToNewUser(this.props.username, this.addNewUser);
   }
 
-  addNewUser = (newUser: string) => {
+  addNewUser = (newUser: User) => {
     // tslint:disable-next-line
     console.log('tried to add new user');
-    let previousListOfUsers: string[] = this.state.connectedUsers;
+    debugger;
+    let previousListOfUsers: User[] = this.state.connectedUsers;
     this.setState({
-      connectedUsers: (previousListOfUsers as string[]).concat([newUser]),
+      connectedUsers: (previousListOfUsers as User[]).concat([newUser]),
     });
-  }
+  };
+
+  handleChallengeResponse = (response: string, user: User) => {
+    if (response === 'accepted') {
+      createGame(user);
+    }
+  };
 
   render() {
-
+    // tslint:disable-next-line
+    debugger;
     return (
      <div className="connected-player-list-container">
-       <div className="title"> Connected Players </div>
-       <div className="list">
-         {this.state.connectedUsers.map((connectedUser: string) => {
-           return (
-             <ConnectedPlayerRowInList user={connectedUser} key={connectedUser}/>
-           );
-         })}
-       </div>
+       Empty
+       {/*<div className="title"> Connected Players </div>*/}
+       {/*<div className="list">*/}
+         {/*{this.state.connectedUsers.map((connectedUser: User) => {*/}
+           {/*return (*/}
+             {/*<ConnectedPlayerRowInList*/}
+               {/*user={connectedUser}*/}
+               {/*key={Math.random()}*/}
+               {/*handleChallengeResponse={this.handleChallengeResponse}*/}
+             {/*/>*/}
+           {/*);*/}
+         {/*})}*/}
+       {/*</div>*/}
      </div>
     );
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => {
+  return { createGame:(user: User) => dispatch(createGame(user)) }
+};
 
 export default ConnectedPlayersList;

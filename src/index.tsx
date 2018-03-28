@@ -14,7 +14,6 @@ import { MuiThemeProvider } from 'material-ui/styles';
 
 const store = configureStore({});
 
-// TODO: make the app a protected path and figure out routing
 ReactDOM.render(
   <MuiThemeProvider>
     <Provider store={store}>

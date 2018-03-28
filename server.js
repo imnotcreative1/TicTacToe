@@ -1,12 +1,27 @@
 const io = require('socket.io')();
 
+const MAX = 10000;
+
+function generateUserID() {
+    return Math.floor(Math.random() * MAX);
+}
+
+const listOfAllUsers = [];
+
 io.on('connection', (client) => {
-    client.on('subscribeToNewUser', () => {
-        console.log('client is subscribing to a new user');
+    client.on('subscribeToNewUser', (username) => {
         client.join('the only room', () => {
-            // TODO: emit all the current users for display
-            io.to('the only room').emit('newUser', 'A User');
+            io.to('the only room').emit('newUser', { username: username, userID: 1});
         });
+    });
+    client.on('challengePlayer', (username) => {
+       // TODO: find the client via their generate id
+    });
+    client.on('createUserRequest', (username) => {
+        const randomID = generateUserID();
+        listOfAllUsers.push({ username: username, userID: randomID});
+        console.log('added a new user with a username of ', username);
+        client.emit('createdUser', {username: username, userID: randomID});
     });
 });
 
